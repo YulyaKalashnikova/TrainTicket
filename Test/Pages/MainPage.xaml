@@ -1,0 +1,240 @@
+﻿<Page x:Class="Test.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Test.Pages" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="MainPage">
+    <Page.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <TabControl Margin="5">
+            <TabItem Header="Профиль">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox BorderBrush="Black" BorderThickness="1" Header="Профиль" FontWeight="Bold">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Text="Почта"></TextBlock>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Text="Пароль" Grid.Row="1"></TextBlock>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Text="Роль" Grid.Row="2"></TextBlock>
+                            <TextBox Style="{StaticResource DefaultTextBox}" Grid.Column="1" Text="{Binding Email}"></TextBox>
+                            <TextBox Style="{StaticResource DefaultTextBox}" Grid.Row="1" Grid.Column="1" Text="{Binding Password}"></TextBox>
+                            <ComboBox IsEnabled="False" Style="{StaticResource DefaultComboBox}" Grid.Row="2" Name="RolesBox" DisplayMemberPath="Title" SelectedItem="{Binding Roles}" SelectedValue="Title" Grid.Column="1"></ComboBox>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox BorderBrush="Black" BorderThickness="1" Header="Паспортные данные" FontWeight="Bold" Grid.Column="1">
+                        <Grid DataContext="{Binding PassportData}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Text="Фамилия"></TextBlock>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Text="Имя"></TextBlock>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Text="Отчество"></TextBlock>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="3" Text="Серия"></TextBlock>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="4" Text="Номер"></TextBlock>
+                            <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="5" Text="Дата выдачи"></TextBlock>
+                            <TextBox Style="{StaticResource DefaultTextBox}" Grid.Column="1" Text="{Binding LastName}"></TextBox>
+                            <TextBox Style="{StaticResource DefaultTextBox}" Grid.Column="1" Grid.Row="1" Text="{Binding FirstName}"></TextBox>
+                            <TextBox Style="{StaticResource DefaultTextBox}" Grid.Column="1" Grid.Row="2" Text="{Binding MiddleName}"></TextBox>
+                            <TextBox Style="{StaticResource DefaultTextBox}" Grid.Column="1" Grid.Row="3" Text="{Binding Series}"></TextBox>
+                            <TextBox Style="{StaticResource DefaultTextBox}" Grid.Column="1" Grid.Row="4" Text="{Binding Number}"></TextBox>
+                            <DatePicker Style="{StaticResource DefaultDatePicker}" Grid.Column="1" Grid.Row="5" SelectedDate="{Binding DateOfIssue}" Text="{Binding DateOfIssue,StringFormat=dd/MM/yyyy}"></DatePicker>
+                        </Grid>
+                    </GroupBox>
+                    <Button Style="{StaticResource DefaultButton}" Grid.Column="1" Grid.Row="1" Name="Submit" Click="Submit_Click" Content="Подтвердить"></Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Избранное">
+                <GroupBox Grid.Row="1" Header="Маршруты" BorderBrush="Black" BorderThickness="1">
+                    <DataGrid Name="RoutesGrid" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="*">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Откуда" Binding="{Binding Stations.Code}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Куда" Binding="{Binding Stations1.Code}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Дистанция" Binding="{Binding Distance}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Время" Binding="{Binding Time}"></DataGridTextColumn>
+                            <DataGridTemplateColumn Header="Избранное">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Height="50" Name="BtnFavorite" Click="BtnFavorite_Click">
+                                            <Button.Content>
+                                                <Image>
+                                                    <Image.Style>
+                                                        <Style TargetType="{x:Type Image}">
+                                                            <Setter Property="Source" Value="/Images/NoFavorite.png"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                                    <Setter Property="Source" Value="/Images/Favorite.png"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                            </Button.Content>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Расписание">
+                <ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox 
+                        Header="Поиск"
+                        Grid.ColumnSpan="3"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        FontWeight="Bold">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock HorizontalAlignment="Right" Style="{StaticResource DefaultTextBlock}">Откуда</TextBlock>
+                                <ComboBox Style="{StaticResource DefaultComboBox}" SelectedIndex="0" Name="CmbFrom" Grid.Column="1" DisplayMemberPath="Code"></ComboBox>
+                                <TextBlock HorizontalAlignment="Right"  Style="{StaticResource DefaultTextBlock}" Grid.Column="2">Куда</TextBlock>
+                                <ComboBox Style="{StaticResource DefaultComboBox}" SelectedIndex="0" Name="CmbTo" Grid.Column="3" DisplayMemberPath="Code"></ComboBox>
+                                <TextBlock HorizontalAlignment="Right"  Style="{StaticResource DefaultTextBlock}" Grid.Column="4">Вагон</TextBlock>
+                                <ComboBox Style="{StaticResource DefaultComboBox}" SelectedIndex="0" Name="CmbWagons" Grid.Column="5" DisplayMemberPath="Name"></ComboBox>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                    <RadioButton Content="Туда" Tag="1" Click="RadioButton_Click" IsChecked="True" Style="{StaticResource DefaultRadioButton}"></RadioButton>
+                                    <RadioButton Content="Туда и обратно" Click="RadioButton_Click" Tag="2" Style="{StaticResource DefaultRadioButton}"></RadioButton>
+                                </StackPanel>
+                                <TextBlock HorizontalAlignment="Right"  Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="1">Дата отправления</TextBlock>
+                                <DatePicker Style="{StaticResource DefaultDatePicker}" Name="DpOutbound" Grid.Row="1" Grid.Column="2"></DatePicker>
+                                <TextBlock HorizontalAlignment="Right"  Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="3">Дата прибытия</TextBlock>
+                                <DatePicker Style="{StaticResource DefaultDatePicker}" Name="DpArrival" Grid.Row="1" Grid.Column="4"></DatePicker>
+                                <Button Style="{StaticResource DefaultButton}" Name="BtnApply" Click="BtnApply_OnClick" Grid.Column="5" Grid.Row="1">Поиск</Button>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox
+                        Margin="5"
+                        Header="Расписание отправлений"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3">
+                            <DataGrid
+                        ColumnWidth="*"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        Name="OutboundGrid"
+                        HeadersVisibility="Column">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Confirmed}" Value="False">
+                                                <Setter Property="Background" Value="Red"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Дата" Binding="{Binding Date,StringFormat=dd/MM/yyyy}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Время" Binding="{Binding Date,StringFormat=hh:mm:ss}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Откуда" Binding="{Binding Routes.Stations.Code}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Куда" Binding="{Binding Routes.Stations1.Code}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Поезд" Binding="{Binding Trains.Name}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Цена" Binding="{Binding EconomyPrice,StringFormat={}{0:N0} ₽}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                        <GroupBox
+                        Margin="5"
+                        Header="Расписание прибытий"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="3">
+                            <DataGrid
+                        ColumnWidth="*"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        Name="ReturnsGrid"
+                        HeadersVisibility="Column">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Confirmed}" Value="False">
+                                                <Setter Property="Background" Value="Red"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Дата" Binding="{Binding Date,StringFormat=dd/MM/yyyy}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Время" Binding="{Binding Date,StringFormat=hh:mm:ss}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Откуда" Binding="{Binding Routes.Stations.Code}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Куда" Binding="{Binding Routes.Stations1.Code}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Поезд" Binding="{Binding Trains.Name}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Цена" Binding="{Binding EconomyPrice,StringFormat={}{0:N0} ₽}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                        <Button Style="{StaticResource DefaultButton}" HorizontalAlignment="Right" Name="BtnBooking" Content="Бронь" Grid.Row="3" Grid.Column="3" Click="BtnBooking_Click"></Button>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>
